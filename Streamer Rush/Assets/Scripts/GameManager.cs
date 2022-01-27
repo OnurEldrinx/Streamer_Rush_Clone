@@ -13,6 +13,12 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance;
 
+    public int viewerScore;
+    public int goldScore;
+
+    public Text viewerText;
+    public Text goldScoreText;
+
     private void Awake()
     {
         
@@ -36,6 +42,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
 
+        viewerScore = Random.Range(100,400);
+        goldScore = 0;
         
         
     }
@@ -43,7 +51,9 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+        viewerText.text = "" + viewerScore;
+        goldScoreText.text = "" + goldScore;
         
     }
 }

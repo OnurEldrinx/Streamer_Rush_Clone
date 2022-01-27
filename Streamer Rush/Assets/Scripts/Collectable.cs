@@ -16,7 +16,7 @@ public class Collectable : MonoBehaviour
         if(gameObject.tag == "Good")
         {
 
-            point = 5;
+            point = 20;
 
         }else if(gameObject.tag == "Bad")
         {

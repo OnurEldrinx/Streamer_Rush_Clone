@@ -9,6 +9,8 @@ TagManager:
   - FxTemporaire
   - Good
   - Bad
+  - SkateStart
+  - SkateEnd
   layers:
   - Default
   - TransparentFX

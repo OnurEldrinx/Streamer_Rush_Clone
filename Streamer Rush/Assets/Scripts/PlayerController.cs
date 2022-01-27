@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject currentPlayerModel;
     private float speed = 5;
 
-    private int characterLevel;
+    public int characterLevel;
     public string characterType;
 
     public GameObject[] animeGirlModels; // index 0 is level 0 girl, index 1 is level 1 girl
@@ -22,11 +22,11 @@ public class PlayerController : MonoBehaviour
 
     public int viewer;
 
+    public GameObject skate;
+
     // Start is called before the first frame update
     void Start()
     {
-
-        viewer = 400;
 
         characterLevel = -1;
 
@@ -47,6 +47,12 @@ void Update()
 
         Move();
 
+        if(ProgressBar.instance.slider.value >= 100 && (characterLevel <= animeGirlModels.Length-2))
+        {
+
+            UpgradePlayerSkin();
+
+        }
         
 
     }
@@ -120,9 +126,22 @@ void Update()
             other.transform.parent.gameObject.SetActive(false);
 
             ProgressBar.instance.MakeProgress(other.transform.parent.gameObject.GetComponent<Collectable>().point);
+            GameManager.Instance.viewerScore += other.transform.parent.gameObject.GetComponent<Collectable>().point;
 
 
         }
+
+
+
+        //Skate
+        if(other.tag == "SkateStart")
+        {
+
+            skate.SetActive(true);
+            currentPlayerModel.GetComponent<Animator>().SetBool("isOnSkate", true);
+
+        }
+
 
     }
 
@@ -141,6 +160,70 @@ void Update()
 
         }
         
+        if(other.tag == "SkateEnd")
+        {
+
+            skate.SetActive(false);
+            currentPlayerModel.GetComponent<Animator>().SetBool("isOnSkate", false);
+
+        }
+
+
+    }
+
+    public void UpgradePlayerSkin()
+    {
+
+
+        for (int i = 0; i < currentPlayerModel.GetComponent<Animator>().parameterCount; i++)
+        {
+
+            if (currentPlayerModel.GetComponent<Animator>().GetParameter(i).type == AnimatorControllerParameterType.Bool)
+            {
+
+                activeAnimationNames.Add(currentPlayerModel.GetComponent<Animator>().GetParameter(i).name);
+                activeAnimationBools.Add(currentPlayerModel.GetComponent<Animator>().GetBool(currentPlayerModel.GetComponent<Animator>().GetParameter(i).name));
+
+            }
+
+        }
+
+        currentPlayerModel.SetActive(false);
+
+
+        if (characterType == "Attractive")
+        {
+
+            
+
+            if (attractiveGirlModels[characterLevel + 1] != null)
+            {
+                currentPlayerModel = attractiveGirlModels[characterLevel + 1];
+            }
+                   
+        }else if(characterType == "Anime")
+        {
+
+            if (animeGirlModels[characterLevel + 1] != null)
+            {
+                currentPlayerModel = animeGirlModels[characterLevel + 1];
+            }
+
+        }
+
+        currentPlayerModel.SetActive(true);
+        characterLevel++;
+        ProgressBar.instance.slider.value = 0;
+
+
+        for (int i = 0; i < activeAnimationNames.Count; i++)
+        {
+
+            currentPlayerModel.GetComponent<Animator>().SetBool(activeAnimationNames[i], activeAnimationBools[i]);
+
+        }
+
+        currentPlayerModel.GetComponent<Animator>().SetBool("isHappy", true);
 
 
     }

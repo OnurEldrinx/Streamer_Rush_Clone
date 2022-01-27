@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ProgressBar : MonoBehaviour
 {
 
-    private Slider slider;
+    public Slider slider;
 
     public static ProgressBar instance;
 
