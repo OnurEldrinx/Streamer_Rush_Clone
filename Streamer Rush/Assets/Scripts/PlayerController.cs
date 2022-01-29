@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
 
     private CharacterController playerController;
-    [SerializeField] private GameObject currentPlayerModel;
-    private float speed = 5;
+    public GameObject currentPlayerModel;
+    public float speed = 5;
 
     public int characterLevel;
     public string characterType;
@@ -45,7 +46,8 @@ public class PlayerController : MonoBehaviour
 void Update()
     {
 
-        Move();
+        if(!Minigame.isStarted)
+            Move();
 
         if(ProgressBar.instance.slider.value >= 100 && (characterLevel <= animeGirlModels.Length-2))
         {
@@ -142,8 +144,39 @@ void Update()
 
         }
 
+        //Minigame
+        if(other.tag == "MinigameStart")
+        {
+
+            Minigame.isStarted = true;
+            GameManager.Instance.minigameCam.SetActive(true);
+
+            speed = 0;
+            Minigame.Instance.normalProgressBar.SetActive(false);
+
+            transform.DOMove(Minigame.Instance.playerPos.transform.position, 2f);
+
+            StartCoroutine(Wait(1.5f));
+
+            Minigame.Instance.enemy.SetActive(true);
+
+            
+
+
+
+        }
+
 
     }
+
+    IEnumerator Wait(float t)
+    {
+
+        yield return new WaitForSeconds(t);
+        currentPlayerModel.GetComponent<Animator>().SetBool("Minigame", true);
+
+    }
+
 
     private void OnTriggerExit(Collider other)
     {
@@ -227,5 +260,7 @@ void Update()
 
 
     }
+
+    
 
 }

@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public Text viewerText;
     public Text goldScoreText;
 
+    public GameObject minigameCam;
+
     private void Awake()
     {
         

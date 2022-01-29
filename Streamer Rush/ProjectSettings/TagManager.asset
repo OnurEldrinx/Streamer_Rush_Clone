@@ -11,6 +11,7 @@ TagManager:
   - Bad
   - SkateStart
   - SkateEnd
+  - MinigameStart
   layers:
   - Default
   - TransparentFX
