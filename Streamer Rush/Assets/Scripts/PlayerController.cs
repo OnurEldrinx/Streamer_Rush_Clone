@@ -25,9 +25,19 @@ public class PlayerController : MonoBehaviour
 
     public GameObject skate;
 
+    public GameObject pathA;
+    public GameObject pathB;
+    public GameObject pathC;
+
+    private Vector3 verticalMovementDirection;
+    private Vector3 horizontalMovementDirection;
+
     // Start is called before the first frame update
     void Start()
     {
+
+        verticalMovementDirection = Vector3.forward * speed / 2;
+        horizontalMovementDirection = Vector3.right * speed;
 
         characterLevel = -1;
 
@@ -62,7 +72,7 @@ void Update()
     private void AutoForwardMovement()
     {
 
-        playerController.SimpleMove(Vector3.forward * speed/2);
+        playerController.SimpleMove(verticalMovementDirection);
 
     }
 
@@ -73,7 +83,7 @@ void Update()
 
         float h = Input.GetAxis("Horizontal");
 
-        playerController.SimpleMove(Vector3.right * h * speed);
+        playerController.SimpleMove(h * horizontalMovementDirection);
 
     }
 
@@ -165,6 +175,46 @@ void Update()
 
 
         }
+
+
+        //Return
+        if(other.tag == "ReturnStart")
+        {
+
+            verticalMovementDirection = Vector3.left * speed / 2;
+            horizontalMovementDirection = Vector3.forward * speed;
+
+
+            Vector3 a = new Vector3(pathA.transform.position.x,transform.position.y, pathA.transform.position.z);
+            Vector3 b = new Vector3(pathB.transform.position.x, transform.position.y, pathB.transform.position.z);
+            Vector3 c = new Vector3(pathC.transform.position.x, transform.position.y, pathC.transform.position.z);
+
+
+            Vector3[] p = { a, c, b};
+            transform.DOPath(p, 2).OnComplete(()=>speed = 5);
+            transform.DORotate(new Vector3(0, -90, 0),2);
+        }
+
+
+       
+        // Door
+        if(other.tag == "Door")
+        {
+
+            GameManager.Instance.onDoor = true;
+
+
+        }
+
+        //Coin
+        if(other.tag == "Coin")
+        {
+
+            other.gameObject.SetActive(false);
+            GameManager.Instance.goldScore += 10; 
+
+        }
+
 
 
     }

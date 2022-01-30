@@ -12,6 +12,10 @@ TagManager:
   - SkateStart
   - SkateEnd
   - MinigameStart
+  - ReturnStart
+  - ReturnEnd
+  - Door
+  - Coin
   layers:
   - Default
   - TransparentFX

@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject minigameCam;
 
+    public bool onDoor;
     private void Awake()
     {
         

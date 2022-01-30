@@ -55,9 +55,7 @@ public class Minigame : MonoBehaviour
 
                 Minigame.Instance.winner = true;
                 player.GetComponent<PlayerController>().currentPlayerModel.GetComponent<Animator>().SetBool("punch", true);
-                //currentPlayerModel.GetComponent<Animator>().Play("Boxing");
-                player.GetComponent<PlayerController>().viewer += 500;
-                Debug.Log(player.GetComponent<PlayerController>().viewer);
+                GameManager.Instance.viewerScore += 500;
                 StartCoroutine(AfterPunch());
                 
 
@@ -68,8 +66,7 @@ public class Minigame : MonoBehaviour
 
                 Minigame.Instance.winner = false;
                 Minigame.Instance.enemy.GetComponent<Animator>().SetBool("punch", true);
-                //Minigame.Instance.enemy.GetComponent<Animator>().Play("Boxing");
-                player.GetComponent<PlayerController>().viewer -= 500;
+                GameManager.Instance.viewerScore -= 500;
                 StartCoroutine(AfterPunch());
 
 
@@ -84,10 +81,10 @@ public class Minigame : MonoBehaviour
     IEnumerator AfterPunch()
     {
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(3);
+        player.GetComponent<PlayerController>().speed = 5;
         player.GetComponent<PlayerController>().currentPlayerModel.GetComponent<Animator>().SetBool("punch", false);
         player.GetComponent<PlayerController>().currentPlayerModel.GetComponent<Animator>().SetBool("Minigame", false);
-        player.GetComponent<PlayerController>().speed = 5;
 
         if (winner)
         {
@@ -106,15 +103,16 @@ public class Minigame : MonoBehaviour
 
         }
 
-        GameManager.Instance.minigameCam.SetActive(false);
 
         enemy.SetActive(false);
 
         Minigame.isStarted = false;
 
+        GameManager.Instance.minigameCam.SetActive(false);
+
     }
 
-    
+
 
 
 
