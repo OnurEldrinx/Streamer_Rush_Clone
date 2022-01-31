@@ -32,9 +32,18 @@ public class PlayerController : MonoBehaviour
     private Vector3 verticalMovementDirection;
     private Vector3 horizontalMovementDirection;
 
+    public GameObject balloon;
+    private bool isFlying;
+
+    private int bonus;
+
+    public GameObject landingPositionY;
+
     // Start is called before the first frame update
     void Start()
     {
+
+        DOTween.SetTweensCapacity(1250, 500);
 
         verticalMovementDirection = Vector3.forward * speed / 2;
         horizontalMovementDirection = Vector3.right * speed;
@@ -50,30 +59,75 @@ public class PlayerController : MonoBehaviour
         activeAnimationBools = new List<bool>();
         activeAnimationNames = new List<string>();
 
+        
+
 }
 
 // Update is called once per frame
 void Update()
     {
 
-        if(!Minigame.isStarted)
-            Move();
-
-        if(ProgressBar.instance.slider.value >= 100 && (characterLevel <= animeGirlModels.Length-2))
+        if (!GameManager.Instance.levelFinished)
         {
+            if (!Minigame.isStarted)
+                Move();
 
-            UpgradePlayerSkin();
+            if (ProgressBar.instance.slider.value >= 100 && (characterLevel <= animeGirlModels.Length - 2))
+            {
 
+                UpgradePlayerSkin();
+
+            }
+
+
+            if (isFlying)
+            {
+
+
+                if (GameManager.Instance.viewerScore > 0)
+                {
+
+                    GameManager.Instance.viewerScore -= 1;
+
+                }
+
+                if (GameManager.Instance.viewerScore == 0)
+                {
+
+                    transform.DOMoveY(landingPositionY.transform.position.y + 0.2f, 5).OnComplete(() => finish());
+
+                }
+
+            }
         }
-        
+
+    }
+
+    public void finish()
+    {
+
+        //isFlying = false;
+        speed = 0;
+        currentPlayerModel.GetComponent<Animator>().Play("Dance");
+        balloon.gameObject.SetActive(false);
+        Minigame.Instance.normalProgressBar.SetActive(false);
+        GameManager.Instance.levelFinished = true;
 
     }
 
     private void AutoForwardMovement()
     {
 
-        playerController.SimpleMove(verticalMovementDirection);
+        if (!isFlying)
+        {
+            playerController.SimpleMove(verticalMovementDirection);
+        }
+        else if(isFlying == true)
+        {
 
+            playerController.Move(verticalMovementDirection * Time.deltaTime);
+
+        }
     }
 
     void Move()
@@ -83,7 +137,17 @@ void Update()
 
         float h = Input.GetAxis("Horizontal");
 
-        playerController.SimpleMove(h * horizontalMovementDirection);
+        if (!isFlying)
+        {
+            playerController.SimpleMove(h * horizontalMovementDirection);
+        }
+        else if (isFlying == true)
+        {
+
+            playerController.Move(h * horizontalMovementDirection * Time.deltaTime);
+
+        }
+
 
     }
 
@@ -216,6 +280,18 @@ void Update()
         }
 
 
+        
+
+        // Bonus
+        if (int.TryParse(other.tag, out bonus))
+        {
+
+            Debug.Log(bonus);
+            GameManager.Instance.goldScore *= bonus;
+
+        }
+
+
 
     }
 
@@ -248,6 +324,16 @@ void Update()
 
             skate.SetActive(false);
             currentPlayerModel.GetComponent<Animator>().SetBool("isOnSkate", false);
+
+        }
+
+        if(other.tag == "Fly")
+        {
+
+            balloon.gameObject.SetActive(true);
+            speed = 2f;
+            isFlying = true;
+            currentPlayerModel.GetComponent<Animator>().Play("Idle");
 
         }
 

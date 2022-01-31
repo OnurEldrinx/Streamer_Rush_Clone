@@ -16,6 +16,12 @@ TagManager:
   - ReturnEnd
   - Door
   - Coin
+  - 5
+  - 15
+  - 30
+  - 40
+  - 50
+  - Fly
   layers:
   - Default
   - TransparentFX
