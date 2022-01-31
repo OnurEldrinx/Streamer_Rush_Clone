@@ -22,6 +22,8 @@ TagManager:
   - 40
   - 50
   - Fly
+  - Green
+  - Red
   layers:
   - Default
   - TransparentFX

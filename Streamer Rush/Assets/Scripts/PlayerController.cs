@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
 
         currentPlayerModel = poorWomanModel;
 
-        currentPlayerModel.GetComponent<Animator>().SetBool("isGameStarted",true);
 
         activeAnimationBools = new List<bool>();
         activeAnimationNames = new List<string>();
@@ -67,8 +66,12 @@ public class PlayerController : MonoBehaviour
 void Update()
     {
 
-        if (!GameManager.Instance.levelFinished)
+        if (!GameManager.Instance.levelFinished && GameManager.Instance.isGameStarted)
         {
+
+            
+
+
             if (!Minigame.isStarted)
                 Move();
 
@@ -111,6 +114,7 @@ void Update()
         currentPlayerModel.GetComponent<Animator>().Play("Dance");
         balloon.gameObject.SetActive(false);
         Minigame.Instance.normalProgressBar.SetActive(false);
+        GameManager.Instance.restartButton.SetActive(true);
         GameManager.Instance.levelFinished = true;
 
     }
@@ -223,6 +227,7 @@ void Update()
         {
 
             Minigame.isStarted = true;
+            Minigame.Instance.minigameWheel.gameObject.SetActive(true);
             GameManager.Instance.minigameCam.SetActive(true);
 
             speed = 0;

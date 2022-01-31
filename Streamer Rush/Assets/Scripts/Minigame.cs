@@ -32,6 +32,9 @@ public class Minigame : MonoBehaviour
 
     public bool winner;
 
+    public GameObject minigameWheel;
+    public bool onGreen;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +53,7 @@ public class Minigame : MonoBehaviour
         {
 
 
-            if (Input.GetMouseButtonDown(0))
+            if (onGreen && Input.GetMouseButtonDown(0))
             {
 
                 Minigame.Instance.winner = true;
@@ -61,7 +64,7 @@ public class Minigame : MonoBehaviour
 
 
             }
-            else if (Input.GetMouseButtonDown(1))
+            else if (onGreen == false && Input.GetMouseButtonDown(0))
             {
 
                 Minigame.Instance.winner = false;
